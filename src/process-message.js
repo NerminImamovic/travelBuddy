@@ -47,27 +47,20 @@ const sendTextMessage = (userId, text) => {
   );
 }
 
-const getUser = async (senderId) => {
+const getUser =  (senderId) => {
 
   console.log("SenderID" + senderId);
 
-  return await fetch(
-    `https://graph.facebook.com/v6/${senderId}`,
+  return  fetch(
+    `https://graph.facebook.com/v6.0/${senderId}?access_token=${FACEBOOK_ACCESS_TOKEN}`,
     {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      method: 'GET',
-      qs: {
-        fields: "first_name",
-        access_token: FACEBOOK_ACCESS_TOKEN,
-      }
+      method: 'GET'
     }
   );
 
 }
 
-module.exports = (event) => {
+module.exports = async (event) => {
 
   console.log("Event " + JSON.stringify(event));
 
@@ -84,81 +77,84 @@ module.exports = (event) => {
     },
   };
 
-  sessionClient
-    .detectIntent(request)
-    .then(async responses => {
+  let responses;
 
-      console.log("Response " + JSON.stringify(responses));
+  try {
 
-      const result = responses[0].queryResult;
+    responses = await sessionClient.detectIntent(request);
 
-      let user;
+  } catch (err) {
+    console.error('ERROR:', err);
+  }
 
-      try {
-        user = await getUser(userId)
-        .then(reuslt => {
-          console.log("Result " + JSON.stringify(result));
-        })
+  let user;
+  const result = await responses[0].queryResult;
 
-        console.log("User " + JSON.stringify(user));
-      } catch(err) {
-        console.log("Error " + JSON.stringify(err));
-      }
+  try {
+    const response = await getUser(userId);
+    user = await response.json()
 
-      if (result.fulfillmentMessages[0].text.text[0].startsWith("Done!")) {
+    if(response.ok) {
+      console.log("User " + JSON.stringify(user));
+    } else {
+      console.log("Dobio sam error")
+    }
+   
+  } catch(err) {
+    console.log("Error " + JSON.stringify(err));
+  }
 
-        console.log("Moze proci");
+    if (result.fulfillmentMessages[0].text.text[0].startsWith("Done!")) {
 
-        if (result.intent.displayName === "BookRooms") {
-          
-          const parameters = result.parameters.fields;
+      console.log("Moze proci");
 
-          console.log("Parameters " + JSON.stringify(parameters));
+      if (result.intent.displayName === "BookRooms") {
+        
+        const parameters = result.parameters.fields;
 
-          const data = {
-            type: parameters.Rooms.stringValue,
-            date: parameters.date.stringValue,
-            city: parameters["geo-city"].stringValue,
-            name: user.first_name + ' ' + user.last_name,
-          }
+        console.log("Parameters " + JSON.stringify(parameters));
 
-          console.log("Data " + JSON.stringify(data));
-          
-          try {
-            await RoomService.addRoom(data);
-          } catch(err) {
-            console.log("Error " + err);
-          }
-
-        } else if (result.intent.displayName === "RentCars") {
-
-          const parameters = result.parameters.fields;
-
-          console.log("Parameters " + JSON.stringify(parameters));
-
-          const data = {
-            type: parameters.Cars.stringValue,
-            date: parameters.date.stringValue,
-            name: user.first_name + ' ' + user.last_name,
-          }
-
-          console.log("Data " + JSON.stringify(data));
-          
-          try {
-            await CarService.addCar(data);
-          } catch(err) {
-            console.log("Error " + err);
-          }
-
+        const data = {
+          type: parameters.Rooms.stringValue,
+          date: parameters.date.stringValue,
+          city: parameters["geo-city"].stringValue,
+          name: user.first_name + ' ' + user.last_name,
         }
 
+        console.log("Data " + JSON.stringify(data));
+        
+        try {
+          await RoomService.addRoom(data);
+        } catch(err) {
+          console.log("Error " + err);
+        }
+
+      } else if (result.intent.displayName === "RentCars") {
+
+        const parameters = result.parameters.fields;
+
+        console.log("Parameters " + JSON.stringify(parameters));
+
+        const data = {
+          type: parameters.Cars.stringValue,
+          date: parameters.date.stringValue,
+          name: user.first_name + ' ' + user.last_name,
+        }
+
+        console.log("Data " + JSON.stringify(data));
+        
+        try {
+          await CarService.addCar(data);
+        } catch(err) {
+          console.log("Error " + err);
+        }
 
       }
 
-      return sendTextMessage(userId, result.fulfillmentText);
-    })
-    .catch(err => {
-      console.error('ERROR:', err);
-    });
+
+    }
+
+    return sendTextMessage(userId, result.fulfillmentText);
+
 }
 
