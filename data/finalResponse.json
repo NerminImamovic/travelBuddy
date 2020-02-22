@@ -1,0 +1,67 @@
+[
+    {
+        "responseId": "60a9d07a-4304-4d1d-8438-6e4505467b80-b4ef8d5f",
+        "queryResult": {
+            "fulfillmentMessages": [
+                {
+                    "platform": "PLATFORM_UNSPECIFIED",
+                    "text": {
+                        "text": [
+                            "Done! I have booked a Double room in Sarajevo for 2019-12-15."
+                        ]
+                    },
+                    "message": "text"
+                }
+            ],
+            "outputContexts": [],
+            "queryText": "tomorrow",
+            "speechRecognitionConfidence": 0,
+            "action": "",
+            "parameters": {
+                "fields": {
+                    "Rooms": {
+                        "stringValue": "Double",
+                        "kind": "stringValue"
+                    },
+                    "date": {
+                        "stringValue": "2019-12-15T12:00:00+01:00",
+                        "kind": "stringValue"
+                    },
+                    "geo-city": {
+                        "stringValue": "Sarajevo",
+                        "kind": "stringValue"
+                    }
+                }
+            },
+            "allRequiredParamsPresent": true,
+            "fulfillmentText": "Done! I have booked a Double room in Sarajevo for 2019-12-15.",
+            "webhookSource": "",
+            "webhookPayload": null,
+            "intent": {
+                "inputContextNames": [],
+                "events": [],
+                "trainingPhrases": [],
+                "outputContexts": [],
+                "parameters": [],
+                "messages": [],
+                "defaultResponsePlatforms": [],
+                "followupIntentInfo": [],
+                "name": "projects/travelbuddy-spckrk/agent/intents/d145eea7-bc4f-4b6a-8af6-5c2041a4d60c",
+                "displayName": "BookRooms",
+                "priority": 0,
+                "isFallback": false,
+                "webhookState": "WEBHOOK_STATE_UNSPECIFIED",
+                "action": "",
+                "resetContexts": false,
+                "rootFollowupIntentName": "",
+                "parentFollowupIntentName": "",
+                "mlDisabled": false
+            },
+            "intentDetectionConfidence": 1,
+            "diagnosticInfo": null,
+            "languageCode": "en"
+        },
+        "webhookStatus": null
+    }
+]
+
