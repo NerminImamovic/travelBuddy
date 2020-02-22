@@ -1,8 +1,9 @@
-## Univerzitet u Sarajevu
-## Elektrotehnički fakultet 
+Univerzitet u Sarajevu
+
+Elektrotehnički fakultet 
 
 # Informacioni sistemi bazirani na vještačkoj inteligenciji
-## Završni rad drugog ciklusa (Master rad)
+Završni rad drugog ciklusa (Master rad)
 
 ## Sažetak 
 
